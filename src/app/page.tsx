@@ -1,65 +1,76 @@
-import Image from "next/image";
+'use client'
+// 1. Импортируем готовый 'db' и 'auth' из твоего файла firebase.ts
+import { db } from '../firebase'; 
+import { useState, useEffect } from 'react';
+import { doc, onSnapshot } from 'firebase/firestore';
+import toast, { Toaster } from 'react-hot-toast';
+
+// Твои настройки цветов из Android (TxPurple)
+const TxPurple = '#6200EE';
+const TxBgDark = '#121212';
 
 export default function Home() {
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Берем ID твоего пользователя из базы
+  const userId = "gQaG7Ni5fyUbVlc65RzyWXwyduG2";
+
+  useEffect(() => {
+    // Слушаем базу в реальном времени (как LiveData в Kotlin)
+    const unsub = onSnapshot(doc(db, "users", userId), (doc) => {
+      if (doc.exists()) {
+        setUserData(doc.data());
+      } else {
+        toast.error("Пользователь не найден");
+      }
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main style={{ backgroundColor: TxBgDark, minHeight: '100vh', color: 'white', fontFamily: 'sans-serif' }}>
+      <Toaster />
+      
+      {/* HEADER */}
+      <div style={{ padding: '20px', borderBottom: `1px solid ${TxPurple}33`, textAlign: 'center' }}>
+        <h1 style={{ color: TxPurple, margin: 0 }}>TemplateX Web</h1>
+      </div>
+
+      {/* CONTENT CARDS */}
+      <div style={{ padding: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={cardStyle}>
+          {loading ? (
+            <p>Загрузка данных из Firebase...</p>
+          ) : (
+            <>
+              <h2 style={{ color: TxPurple }}>Профиль из Android Studio</h2>
+              <div style={{ textAlign: 'left', marginTop: '20px' }}>
+                <p>👤 Имя: <b>{userData?.display_name || 'боззи'}</b></p>
+                <p>📧 Почта: <b>{userData?.email}</b></p>
+                <p>⭐ Рейтинг: <b style={{ color: '#FFD700' }}>{userData?.rating || 0}</b></p>
+              </div>
+            </>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        {/* Сюда будем вставлять твою логику на 1800 строк */}
+        <p style={{ marginTop: '20px', color: '#666', fontSize: '12px' }}>
+          Логика Kotlin готова к переносу...
+        </p>
+      </div>
+    </main>
   );
 }
+
+const cardStyle: any = {
+  background: '#1E1E1E',
+  padding: '30px',
+  borderRadius: '24px',
+  boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+  border: '1px solid #333',
+  width: '100%',
+  maxWidth: '400px',
+  textAlign: 'center'
+};
