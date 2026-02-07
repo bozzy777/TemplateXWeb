@@ -1,24 +1,19 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBQDwVv2h6n2bNSb0ngejuag3oC_5q3Xs4",
+  apiKey: "AIzaSyBQDwVv2h6n2bNSbOngejuag3oC_5q3Xs4",
   authDomain: "templatex-a5385.firebaseapp.com",
   projectId: "templatex-a5385",
   storageBucket: "templatex-a5385.firebasestorage.app",
   messagingSenderId: "233204350462",
-  appId: "1:233204350462:web:ec598ec9bcf16e3f4bd4af",
-  measurementId: "G-FCL4FWY4GN"
+  appId: "1:233204350462:web:ec598ec9bcf16e3f4bd4af"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Проверка: если мы на сервере, просто создаем заглушку, если в браузере - инициализируем
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
-export {app, analytics, db };
+const auth = getAuth(app);
+
+export { app, db, auth };
