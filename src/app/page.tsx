@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
 import { auth, db } from'../firebase';
 import {
-  getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -19,7 +17,6 @@ import {
   deleteUser,
 } from 'firebase/auth';
 import {
-  getFirestore,
   collection,
   addDoc,
   onSnapshot,
